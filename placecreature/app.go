@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 
-	"code.google.com/p/graphics-go/graphics"
 	"github.com/gorilla/mux"
 
 	"appengine"
@@ -23,6 +22,7 @@ import (
 
 	"placecreature/util"
 	"placecreature/model"
+	"placecreature/graphics"
 )
 
 

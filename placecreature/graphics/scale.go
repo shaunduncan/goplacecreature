@@ -5,10 +5,11 @@
 package graphics
 
 import (
-	"code.google.com/p/graphics-go/graphics/interp"
 	"errors"
 	"image"
 	"image/draw"
+
+	"placecreature/graphics/interp"
 )
 
 // Scale produces a scaled version of the image using bilinear interpolation.
