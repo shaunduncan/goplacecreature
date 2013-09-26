@@ -1,0 +1,20 @@
+{{ define "content" }}
+    <div class="row">
+        <div class="col-10 col-offset-1">
+            <p>
+                If you'd like to suggest a creature, or would like to suggest a photo
+                for an existing creature, feel free to <a href="mailto:suggestions@placecreature.com">send a message</a>.
+                If you are suggesting a photo, please keep in mind that only images that
+                are public domain or licensed under Creative Commons will be considered.
+            </p>
+
+            {{ range .Creatures }}
+                <h3 style="display: inline-block">
+                    <span class="label label-default">
+                        {{ .Name }}
+                    </span>
+                </h3>
+            {{ end }}
+        </div>
+    </div>
+{{ end }}

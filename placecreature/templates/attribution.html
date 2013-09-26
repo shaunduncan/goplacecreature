@@ -1,0 +1,43 @@
+{{ define "content" }}
+    <div class="row">
+        <div class="col-10 col-offset-1">
+            <p>
+                All images used are under some form of Creative Commons license. Below, you
+                can find the proper attribution for each image. Please ensure you also
+                give proper attribution to the original author should you use any image.
+                If you are the owner of one of the works below and would like to request
+                it removed from this site, please send a message to
+                <a href="mailto:dmca@placecreature.com">dmca@placecreature.com</a>.
+            </p>
+
+            <p>
+                If you'd like to suggest a creature, or would like to suggest a photo
+                for an existing creature, feel free to <a href="mailto:suggestions@placecreature.com">send a message</a>.
+                If you are suggesting a photo, please keep in mind that only images that
+                are public domain or licensed under Creative Commons will be considered.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        {{ range $index, $creature := .Creatures }}
+            <div class="col-2 {{ if not (mod $index 5) }}col-offset-1{{ end }}">
+                <img src="/{{ $creature.Name }}/150/150" class="img-thumbnail"/>
+                <p style="text-align: center">
+                    <small>
+                        <a rel="license" href="http://creativecommons.org/licenses/{{ lower $creature.License }}/3.0/deed.en_US" target="_blank">
+                            <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/{{ lower $creature.License }}/3.0/80x15.png" />
+                        </a><br />
+                        By <a xmlns:cc="http://creativecommons.org/ns#" href="{{ $creature.AuthorURL }}" property="cc:attributionName" rel="cc:attributionURL" target="_blank">{{ $creature.AuthorName }}</a><br />
+                        <a href="{{ $creature.OriginalURL }}" target="_blank" rel="nofollow">View Original</a>
+                    </small>
+                </p>
+            </div>
+
+            {{ if (eq (mod $index 5) 4) }}
+                </div><div class="row">
+            {{ end }}
+        {{ end }}
+        </div>
+    </div>
+{{ end }}

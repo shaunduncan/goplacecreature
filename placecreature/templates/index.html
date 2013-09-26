@@ -1,0 +1,110 @@
+{{ define "content" }}
+    <div class="row">
+        <div class="col-5 col-offset-1">
+            <p>
+                placecreature is a service for using creature agnostic image placeholders.
+                Inspiration came from what the folks at
+                <a href="http://placekitten.com" rel="nofollow" target="_blank" title="placekitten">placekitten</a>
+                are doing, but, hey, maybe you're not a cat person. Maybe you're more of
+                a dog, cow, or flying squirrel person
+            </p>
+
+            <h3>How To Use</h3>
+            <p>
+                Just like other image placeholder services, you simply add the width
+                and height to your URL path. Like this:
+            </p>
+
+            <p>
+                <code>http://placecreature.com/300/400</code>
+            </p>
+
+            <p>
+                Doing the above will give you a random creature placeholder. If you want
+                to use a specific creature for your placeholder, simply add the creature
+                name to the URL like so, replacing spaces for dashes '-':
+            </p>
+
+            <p>
+                <code>http://placecreature.com/flying-squirrel/300/400</code>
+            </p>
+
+            <p>
+                Note that an invalid creature name will yield a 404 status code.
+                A full list of creatures available can be found at
+                <a href="/creatures" title="Creatures List">http://placecreature.com/creatures</a>.
+                If you want JSON output for a creatures list, use:
+                <a href="/creatures.json" title="JSON Creatures List">http://placecreature.com/creatures.json</a>.
+            </p>
+
+            <h3>Suggest A Creature</h3>
+            <p>
+                If you'd like to suggest a creature, or would like to suggest a photo
+                for an existing creature, feel free to <a href="mailto:suggestions@placecreature.com">send a message</a>.
+                If you are suggesting a photo, please keep in mind that only images that
+                are public domain or licensed under Creative Commons will be considered.
+            </p>
+        </div>
+
+        <div class="col-5">
+            <div class="row" style="margin-bottom: 25px">
+                <div class="col-6">
+                    <img src="/dog/150/150" class="img-thumbnail" />
+                </div>
+
+                <div class="col-6">
+                    <img src="/kitten/150/150" class="img-thumbnail" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 25px">
+                <div class="col-6">
+                    <img src="/sheep/150/150" class="img-thumbnail" />
+                </div>
+
+                <div class="col-6">
+                    <img src="/sugar-glider/150/150" class="img-thumbnail" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <img src="/cow/150/150" class="img-thumbnail" />
+                </div>
+
+                <div class="col-6">
+                    <img src="/piglet/150/150" class="img-thumbnail" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-5 col-offset-1">
+            <h4>Terms</h4>
+            <p>
+                Just because it has to be said: this site is delivered as-is and you
+                use it at your own risk. There is no warranty as far as uptime or reliability
+                of this site and it may unaccessible at any point without notice. All images used on this
+                site are Creative Commons licensed works, with full attribution available
+                <a href="/attribution" title="Image Attribution">here</a>. If you access any
+                image or use it, please ensure you have given propert attribution to the
+                original author(s). If you are the owner of any image used here, and would
+                like to request removal of your work from this site, please do not hesitate
+                to send a <a href="mailto:dmca@placereature.com" title="Placecreature Removal Request">takedown request</a>
+            </p>
+        </div>
+        <div class="col-5">
+            <h4>Privacy Policy</h4>
+            <p>
+                This site does NOT collect any personal information about you, nor
+                does it monitor your browsing habits. However, some third party
+                advertisers may read or set cookies on your browser. This is done
+                in the course of serving advertisements to you. Also, some third
+                party services we use to monitor site traffic may use cookies to
+                collect completely anonymous site traffic data. At no point do we,
+                nor any third party, explicitly monitor your browsing habits.
+            </p> 
+        </div>
+    </div>
+{{ end }}

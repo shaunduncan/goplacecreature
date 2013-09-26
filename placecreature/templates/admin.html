@@ -1,0 +1,24 @@
+{{ define "content" }}
+    {{ with .Alert }}
+        <div class="row">
+            <div class="col-10 col-offset-1">
+                <div class="alert alert-success">{{ . }}</div> 
+            </div>
+        </div>
+    {{ end }}
+
+    <form role="form" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-10 col-offset-1">
+                <div class="form-group">
+                    <label for="fixture">Fixture</label>
+                    <input type="file" class="form-control" id="fixture" name="fixture" />
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">Upload</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{{ end }}
