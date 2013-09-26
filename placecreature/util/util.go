@@ -85,9 +85,17 @@ func NewCreature(creature *model.Creature, context appengine.Context) {
 
 	// Fetch the source contents
 	client := urlfetch.Client(context)
-	resp, _ := client.Get(creature.Source)
+	resp, err := client.Get(creature.Source)
+	if err != nil {
+		panic(err)
+	}
+
 	defer resp.Body.Close()
-	data, _ := ioutil.ReadAll(resp.Body)
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
 
 	// Store the Blob
 	writer, _ := blobstore.Create(context, "image/jpeg")
