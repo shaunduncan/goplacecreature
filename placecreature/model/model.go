@@ -39,6 +39,30 @@ func NewCreature() *Creature {
 	return new(Creature)
 }
 
+func FindCreatureByNameOrAlias(lookup string, ctx appengine.Context) (Creature, error) {
+	var buf []Creature
+	creature := NewCreature()
+
+	datastore.NewQuery(CREATURE_REL).Ancestor(creature.Key(ctx)).GetAll(ctx, &buf)
+
+	// Iterate all creatures, checking if name or any alias matches
+	for _, obj := range buf {
+		if obj.Name == lookup {
+			return obj, nil
+		} else {
+			aliases := sort.StringSlice(obj.Aliases)
+			aliases.Sort()
+			idx := aliases.Search(lookup)
+
+			if idx < len(obj.Aliases) && obj.Aliases[idx] == lookup {
+				return obj, nil
+			}
+		}
+	}
+
+	return Creature{}, errors.New("Not Found")
+}
+
 func (c Creature) Key(context appengine.Context) *datastore.Key {
 	return datastore.NewKey(context, CREATURE_REL, "creatures", 0, nil)
 }
@@ -103,30 +127,6 @@ func (c Creature) CropImage(width, height, max int, ctx appengine.Context) (imag
 	graphics.Thumbnail(dest, src)
 
 	return dest, nil
-}
-
-func FindCreatureByNameOrAlias(lookup string, ctx appengine.Context) (Creature, error) {
-	var buf []Creature
-	creature := NewCreature()
-
-	datastore.NewQuery(CREATURE_REL).Ancestor(creature.Key(ctx)).GetAll(ctx, &buf)
-
-	// Iterate all creatures, checking if name or any alias matches
-	for _, obj := range buf {
-		if obj.Name == lookup {
-			return obj, nil
-		} else {
-			aliases := sort.StringSlice(obj.Aliases)
-			aliases.Sort()
-			idx := aliases.Search(lookup)
-
-			if idx < len(obj.Aliases) && obj.Aliases[idx] == lookup {
-				return obj, nil
-			}
-		}
-	}
-
-	return Creature{}, errors.New("Not Found")
 }
 
 func (c Creature) Exists(context appengine.Context) bool {
