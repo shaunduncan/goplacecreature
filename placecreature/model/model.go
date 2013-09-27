@@ -41,9 +41,8 @@ func NewCreature() *Creature {
 
 func FindCreatureByNameOrAlias(lookup string, ctx appengine.Context) (Creature, error) {
 	var buf []Creature
-	creature := NewCreature()
 
-	datastore.NewQuery(CREATURE_REL).Ancestor(creature.Key(ctx)).GetAll(ctx, &buf)
+	datastore.NewQuery(CREATURE_REL).Ancestor(CreatureKey(ctx)).GetAll(ctx, &buf)
 
 	// Iterate all creatures, checking if name or any alias matches
 	for _, obj := range buf {
@@ -63,7 +62,22 @@ func FindCreatureByNameOrAlias(lookup string, ctx appengine.Context) (Creature, 
 	return Creature{}, errors.New("Not Found")
 }
 
-func (c Creature) Key(context appengine.Context) *datastore.Key {
+func GetPublicCreatures(ctx appengine.Context) []Creature {
+	var creatures []Creature
+
+	q := datastore.NewQuery("Creatures").
+		Filter("IsPublic =", true).
+		Ancestor(CreatureKey(ctx)).
+		Order("Name")
+
+	if _, err := q.GetAll(ctx, &creatures); err != nil {
+		panic(err)
+	}
+
+	return creatures
+}
+
+func CreatureKey(context appengine.Context) *datastore.Key {
 	return datastore.NewKey(context, CREATURE_REL, "creatures", 0, nil)
 }
 
@@ -134,7 +148,7 @@ func (c Creature) Exists(context appengine.Context) bool {
 
 	datastore.NewQuery("Creatures").
 		Filter("Name =", c.Name).
-		Ancestor(c.Key(context)).
+		Ancestor(CreatureKey(context)).
 		Order("Name").
 		Limit(1).
 		GetAll(context, &buf)
@@ -143,7 +157,7 @@ func (c Creature) Exists(context appengine.Context) bool {
 }
 
 func (c Creature) Save(context appengine.Context) {
-	key := datastore.NewIncompleteKey(context, "Creatures", c.Key(context))
+	key := datastore.NewIncompleteKey(context, "Creatures", CreatureKey(context))
 	datastore.Put(context, key, c)
 }
 

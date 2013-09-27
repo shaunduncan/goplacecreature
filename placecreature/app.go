@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"appengine"
-	"appengine/datastore"
 	"appengine/user"
 
 	"placecreature/util"
@@ -89,10 +88,7 @@ func admin(response http.ResponseWriter, request *http.Request) {
 		alert = "Uploaded Successfully"
 	}
 
-	templates["admin"].ExecuteTemplate(response, "base", Context{
-		"Title": "Admin",
-		"Alert": alert,
-	})
+	templates["admin"].ExecuteTemplate(response, "base", Context{"Title": "Admin", "Alert": alert,})
 }
 
 func logout(response http.ResponseWriter, request *http.Request) {
@@ -101,59 +97,26 @@ func logout(response http.ResponseWriter, request *http.Request) {
 
 	if u != nil {
 		url, _ := user.LogoutURL(context, request.URL.String())
-		response.Header().Set("Location", url)
-		response.WriteHeader(http.StatusFound)
+		http.Redirect(response, request, url, http.StatusFound)
 	} else {
-		url := "/"
-		response.Header().Set("Location", url)
-		response.WriteHeader(http.StatusFound)
+		http.Redirect(response, request, "/", http.StatusFound)
 	}
 }
 
 func index(response http.ResponseWriter, request *http.Request) {
-	templates["index"].ExecuteTemplate(response, "base", Context{
-		"Title": "placecreature",
-	})
+	templates["index"].ExecuteTemplate(response, "base", Context{"Title": "placecreature"})
 }
 
 func creatures(response http.ResponseWriter, request *http.Request) {
-	var creatures []model.Creature
-	creature := model.NewCreature()
-
-	context := appengine.NewContext(request)
-	query := datastore.NewQuery("Creatures").
-		Filter("IsPublic =", true).
-		Ancestor(creature.Key(context)).
-		Order("Name")
-
-	if _, err := query.GetAll(context, &creatures); err != nil {
-		http.Error(response, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	templates["creatures"].ExecuteTemplate(response, "base", Context{
-		"Title": "Creatures List",
-		"Creatures": creatures,
+		"Title":     "Creatures List",
+		"Creatures": model.GetPublicCreatures(appengine.NewContext(request)),
 	})
 }
 
 func attribution(response http.ResponseWriter, request *http.Request) {
-	var creatures []model.Creature
-	creature := model.NewCreature()
-
-	context := appengine.NewContext(request)
-	query := datastore.NewQuery("Creatures").
-		Filter("IsPublic =", true).
-		Ancestor(creature.Key(context)).
-		Order("Name")
-
-	if _, err := query.GetAll(context, &creatures); err != nil {
-		http.Error(response, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	templates["attribution"].ExecuteTemplate(response, "base", Context{
-		"Title": "Image Attribution",
-		"Creatures": creatures,
+		"Title":     "Image Attribution",
+		"Creatures": model.GetPublicCreatures(appengine.NewContext(request)),
 	})
 }
