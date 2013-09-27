@@ -2,20 +2,13 @@ package util
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"appengine"
-	"appengine/blobstore"
-	"appengine/datastore"
-	"appengine/urlfetch"
 
 	"placecreature/model"
 )
-
-func CreatureKey(context appengine.Context) *datastore.Key {
-	return datastore.NewKey(context, "Creatures", "creatures", 0, nil)
-}
 
 func ReadUploadedFile(request *http.Request, field string) ([]byte, error) {
 	var contents []byte
@@ -65,44 +58,14 @@ func ImportFixture(contents []byte, context appengine.Context) {
 			break
 		}
 
-		NewCreature(&creature, context)
+		creature.Import(context)
 	}
 }
 
-func NewCreature(creature *model.Creature, context appengine.Context) {
-	var buf []model.Creature
-
-	datastore.NewQuery("Creatures").
-		Filter("Name =", creature.Name).
-		Ancestor(CreatureKey(context)).
-		Order("Name").
-		Limit(1).
-		GetAll(context, &buf)
-
-	if len(buf) > 0 {
-		return
+func ParseInt(val string) int {
+	if num, err := strconv.ParseInt(val, 10, 0); err == nil {
+		return int(num)
+	} else {
+		return 0
 	}
-
-	// Fetch the source contents
-	client := urlfetch.Client(context)
-	resp, err := client.Get(creature.Source)
-	if err != nil {
-		panic(err)
-	}
-
-	defer resp.Body.Close()
-
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-
-	// Store the Blob
-	writer, _ := blobstore.Create(context, "image/jpeg")
-	writer.Write(data)
-	writer.Close()
-	creature.BlobKey, _ = writer.Key()
-
-	key := datastore.NewIncompleteKey(context, "Creatures", CreatureKey(context))
-	datastore.Put(context, key, creature)
 }
